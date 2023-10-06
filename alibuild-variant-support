@@ -1,0 +1,26 @@
+#!/bin/sh
+# This defines a few aliased which can be used
+# to add support for incremental builds in alibuild
+
+# This function executes a command only if we are in a development package
+# and the variant defined by ALIBUILD_BUILD_VARIANT is provided as first\
+# argument.
+function _alibuild-variant-command() {
+  # Check there is at least one argument
+  [ $# -lt 2 ] && { echo "Usage: alibuild-variant-command <variant> <command>"; exit 1; }
+  local _variant=$1
+  shift
+  [ -d $DEVEL_SOURCE ] && [ X$ALIBUILD_BUILD_VARIANT = X$_variant ] && { echo "Variant $_variant: $@" && eval "$@"; }
+}
+
+# This function will stop the build if the variant defined by ALIBUILD_BUILD_VARIANT
+# matches the first argument.
+function _alibuild-variant-done() {
+  # Check there is at least one argument
+  [ $# -lt 1 ] && { echo "Usage: alibuild-variant-done <phase>"; exit 1; }
+  local _phase=$1
+  _alibuild-conditional-command $_phase exit 0
+}
+
+alias alibuild-variant-done='_alibuild-variant-done'
+alias alibuild-variant-command='_alibuild-conditional-command'
