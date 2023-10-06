@@ -5,7 +5,7 @@
 # This function executes a command only if we are in a development package
 # and the variant defined by ALIBUILD_BUILD_VARIANT is provided as first\
 # argument.
-function _alibuild-variant-command() {
+function alibuild-variant-command() {
   # Check there is at least one argument
   [ $# -lt 2 ] && { echo "Usage: alibuild-variant-command <variant> <command>"; exit 1; }
   local _variant=$1
@@ -15,12 +15,9 @@ function _alibuild-variant-command() {
 
 # This function will stop the build if the variant defined by ALIBUILD_BUILD_VARIANT
 # matches the first argument.
-function _alibuild-variant-done() {
+function alibuild-variant-done() {
   # Check there is at least one argument
   [ $# -lt 1 ] && { echo "Usage: alibuild-variant-done <phase>"; exit 1; }
   local _phase=$1
-  _alibuild-conditional-command $_phase exit 0
+  alibuild-variant-command $_phase exit 0
 }
-
-alias alibuild-variant-done='_alibuild-variant-done'
-alias alibuild-variant-command='_alibuild-conditional-command'
